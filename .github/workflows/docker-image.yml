@@ -1,18 +1,24 @@
 name: Docker Image CI
-
+ 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
-
+    branches: [ main ]
+ 
 jobs:
-
+ 
   build:
-
+ 
     runs-on: ubuntu-latest
-
+ 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      env:
+        USER: ${{ secrets.USER }}
+        PASS: ${{ secrets.PASS }}   
+      run: |        
+        docker build . --file Dockerfile --tag omkar263/devops-feb-2025-omkar-webserver1:v1
+        echo $PASS | docker login -u $USER --password-stdin       
+        docker push omkar263/devops-feb-2025-omkar-webserver1:v1
